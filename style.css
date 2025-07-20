@@ -1,150 +1,163 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+:root {
+    --blue-500: #3b82f6; --blue-600: #2563eb;
+    --green-500: #22c55e; --green-600: #16a34a;
+    --purple-500: #8b5cf6; --purple-600: #7c3aed;
+    --orange-500: #f97316; --orange-600: #ea580c;
+    --red-500: #ef4444; --red-600: #dc2626;
+    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+    --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+    --white: #ffffff;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
 
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f0f4f8;
-    color: #333;
-    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--gray-100);
+    color: var(--gray-900);
     margin: 0;
-    padding: 20px;
 }
 
+/* ======== HEADER ======== */
 header {
-    background-color: #00205b;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-    border-radius: 8px;
-    margin-bottom: 30px;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    padding: 1rem 2rem;
 }
-
-header h1 {
-    margin: 0;
-    font-size: 2.5em;
-}
-
-.level {
-    background: #fff;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: opacity 0.5s;
-}
-
-.level.locked {
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-.level.locked::after {
-    content: '🔒 Verrouillé';
-    font-size: 1.5em;
-    color: #a0a0a0;
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-}
-
-
-.skill-category {
-    margin-bottom: 25px;
-}
-
-.skill-category h3 {
-    color: #00205b;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 5px;
-    margin-bottom: 15px;
-}
-
-.exercise {
+.header-container {
+    max-width: 1200px;
+    margin: auto;
     display: flex;
-    align-items: flex-start;
-    margin-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
 }
-
-.exercise input[type="checkbox"] {
-    margin-right: 15px;
-    margin-top: 5px;
-    min-width: 18px;
-    min-height: 18px;
+.logo { display: flex; align-items: center; gap: 1rem; }
+.logo-icon-wrapper {
+    background-color: var(--blue-600);
+    color: var(--white);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    display: grid;
+    place-items: center;
 }
-
-.quiz-btn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    font-size: 1.2em;
-    background-color: #28a745;
-    color: white;
+.logo h1 { font-size: 1.5rem; margin: 0; }
+.logo p { color: var(--gray-500); margin: 0; font-size: 0.9rem; }
+.nav-btn {
+    background: none;
     border: none;
-    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s, color 0.2s;
 }
+.nav-btn.active { background-color: var(--blue-600); color: var(--white); }
 
-.quiz-btn:disabled {
-    background-color: #a0a0a0;
-    cursor: not-allowed;
+/* ======== MAIN & VIEWS ======== */
+main { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+.view { display: none; }
+.view.active { display: block; animation: fadeIn 0.5s; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ======== CARD & LAYOUT ======== */
+.card {
+    background-color: var(--white);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
 }
+.card h3 { margin-top: 0; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+.main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+@media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
 
-.quiz-btn:not(:disabled):hover {
-    background-color: #218838;
+/* ======== DASHBOARD ELEMENTS ======== */
+.welcome-banner {
+    background: linear-gradient(to right, var(--blue-600), var(--purple-600));
+    color: var(--white);
 }
+.welcome-banner h2 { margin: 0 0 0.5rem 0; font-size: 1.75rem; }
+.font-bold { font-weight: 700; }
+.stat-card { text-align: center; }
+.stat-card .icon { font-size: 2rem; color: var(--blue-500); margin-bottom: 0.5rem; }
+.stat-value { font-size: 2.5rem; font-weight: 800; margin: 0; }
+.stat-label { color: var(--gray-500); margin: 0; }
 
-/* Modal Quiz */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.6);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 10% auto;
-    padding: 30px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 600px;
-    border-radius: 10px;
+.modules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+.module-btn {
+    color: var(--white);
+    padding: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
     text-align: center;
 }
+.module-btn:hover { opacity: 0.9; }
+.module-btn .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.icon-left { margin-right: 0.5rem; }
 
-.close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-#quiz-options button {
-    display: block;
+/* ======== BUTTONS ======== */
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    padding: 12px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.5rem;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
+.btn-red { background-color: var(--red-500); color: var(--white); }
+.btn-red:hover { background-color: var(--red-600); }
+.btn-green { background-color: var(--green-500); color: var(--white); }
+.btn-green:hover { background-color: var(--green-600); }
+.btn-blue { background-color: var(--blue-500); color: var(--white); }
+.btn-blue:hover { background-color: var(--blue-600); }
+.btn-gray { background-color: var(--gray-500); color: var(--white); }
+.btn-gray:hover { background-color: var(--gray-700); }
+.btn:disabled { background-color: var(--gray-200); cursor: not-allowed; }
 
-#quiz-options button.selected {
-    background-color: #007bff;
-    color: white;
-    border-color: #0056b3;
+/* ======== MODULE & TEST VIEWS ======== */
+.module-header { color: var(--white); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 1.5rem; }
+.module-header .icon { font-size: 2rem; margin-right: 1rem; }
+.module-header h2 { margin: 0; font-size: 1.75rem; }
+.exercise-card { border-left: 4px solid; padding-left: 1rem; margin-bottom: 1.5rem; }
+.exercise-card h4 { margin: 0 0 0.5rem 0; font-weight: 700; }
+.exercise-card p { margin: 0 0 1rem 0; color: var(--gray-700); }
+
+.test-question { margin-bottom: 1.5rem; }
+.option-btn {
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid var(--gray-200);
+    background-color: var(--gray-50);
+    cursor: pointer;
+    transition: all 0.2s;
 }
+.option-btn:hover { border-color: var(--blue-500); }
+.option-btn.selected { border-color: var(--blue-600); background-color: #dbeafe; }
 
+.results-card { text-align: center; }
+.results-card .icon { font-size: 4rem; margin-bottom: 1rem; }
+.results-card .icon.fa-check-circle { color: var(--green-500); }
+.results-card .icon.fa-times-circle { color: var(--red-500); }
+.results-card h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+.results-feedback { background-color: var(--gray-50); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; }
+.results-feedback .score { font-size: 1.75rem; font-weight: 800; }
 
-#quiz-feedback {
-    margin-top: 20px;
-    font-size: 1.1em;
-    font-weight: bold;
-}
+/* Couleurs des modules */
+.bg-blue { background-color: var(--blue-500); border-color: var(--blue-500); }
+.bg-green { background-color: var(--green-500); border-color: var(--green-500); }
+.bg-purple { background-color: var(--purple-500); border-color: var(--purple-500); }
+.bg-orange { background-color: var(--orange-500); border-color: var(--orange-500); }
