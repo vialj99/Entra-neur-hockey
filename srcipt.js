@@ -1,196 +1,218 @@
-document.addEventListener('DOMContentLoaded', function() {
-    loadProgress();
-});
+document.addEventListener('DOMContentLoaded', () => {
 
-const quizzes = {
-    1: {
-        title: "Quiz du Niveau 1",
-        questions: [
-            {
-                question: "Quelle est la priorité absolue d'un défenseur dans sa propre zone ?",
-                options: ["Faire une longue passe pour l'attaque", "Protéger la 'maison' (l'enclave)", "Mettre en échec le porteur de la rondelle n'importe où"],
-                answer: "Protéger la 'maison' (l'enclave)"
-            },
-            {
-                question: "Quelle est la distance idéale à maintenir avec un attaquant (Gap Control) ?",
-                options: ["Le plus près possible", "À deux longueurs de bâton", "Environ une longueur de bâton"],
-                answer: "Environ une longueur de bâton"
-            }
-        ]
-    },
-    2: {
-        title: "Quiz du Niveau 2",
-        questions: [
-            {
-                question: "Quand un défenseur devrait-il 'pincer' (pinch) à la ligne bleue offensive ?",
-                options: ["À chaque fois que la rondelle est près des bandes", "Seulement s'il est certain de récupérer la rondelle", "Jamais, c'est trop risqué"],
-                answer: "Seulement s'il est certain de récupérer la rondelle"
-            }
-        ]
-    }
-};
-
-let currentQuizNum = 0;
-let selectedOption = null;
-
-function updateProgress() {
-    const levels = [1, 2, 3];
-    levels.forEach(levelNum => {
-        const exercises = document.querySelectorAll(`#level-${levelNum} .exercise input`);
-        if (exercises.length > 0) {
-            const allDone = Array.from(exercises).every(cb => cb.checked);
-            const quizBtn = document.getElementById(`quiz${levelNum}-btn`);
-            if (quizBtn) {
-                quizBtn.disabled = !allDone;
-            }
+    // ======== DATA ========
+    const levels = ['Débutant', 'Intermédiaire', 'Avancé', 'Elite'];
+    const modules = {
+        positionnement: { title: 'Positionnement', icon: 'fa-solid fa-crosshairs', color: 'bg-blue' },
+        tirPasse: { title: 'Tir & Passe', icon: 'fa-solid fa-bolt', color: 'bg-green' },
+        technique: { title: 'Technique', icon: 'fa-solid fa-star', color: 'bg-purple' },
+        intelligence: { title: 'Intelligence de Jeu', icon: 'fa-solid fa-brain', color: 'bg-orange' }
+    };
+    const levelTests = {
+        'Débutant': {
+            title: 'Test de Passage - Niveau Intermédiaire',
+            questions: [
+                { question: "Quelle est la position optimale d'un défenseur lors d'un 2 contre 1?", options: ["Se placer entre les deux attaquants", "Forcer le porteur vers l'extérieur tout en gardant un œil sur le passeur", "Attaquer directement le porteur"], correct: 1, explanation: "En forçant le porteur vers l'extérieur, vous réduisez son angle de tir et rendez la passe plus difficile." },
+                { question: "Quel type de passe un défenseur doit-il privilégier en sortie de zone?", options: ["Passe haute et longue", "Passe courte et précise le long de la bande", "Passe au centre de la patinoire"], correct: 1, explanation: "La passe le long de la bande est la plus sûre pour éviter les revirements dangereux au centre." },
+            ]
+        },
+        'Intermédiaire': {
+            title: 'Test de Passage - Niveau Avancé',
+            questions: [
+                { question: "Comment gérer un attaquant qui fait du 'cycling' derrière votre filet?", options: ["Le suivre partout", "Rester devant le filet", "Coordonner avec le partenaire pour le serrer"], correct: 2, explanation: "La communication et la coordination avec votre partenaire sont essentielles pour contrer le cycle sans vous désorganiser." },
+                { question: "Quelle technique utiliser pour un tir frappé efficace depuis la ligne bleue?", options: ["Transfert de poids arrière vers avant", "Mouvement rapide des bras seulement", "Position statique"], correct: 0, explanation: "Un bon tir frappé tire sa puissance d'un transfert de poids complet du corps." }
+            ]
+        },
+        'Avancé': {
+            title: 'Test de Passage - Niveau Elite',
+            questions: [
+                 { question: "Dans un 'pinch' réussi, quelle est la clé?", options: ["La vitesse", "La surprise", "La certitude de récupérer la rondelle"], correct: 2, explanation: "Ne pincez que si vous êtes sûr à 90% ou plus de réussir. Un pinch raté mène souvent à un surnombre contre votre équipe." },
+            ]
         }
-    });
-    saveProgress();
-}
+    };
+    const exercises = {
+        positionnement: [
+            { title: 'Situation 2 contre 1', scenario: "L'adversaire arrive à 2 contre vous. Votre priorité est de couper la ligne de passe tout en contrôlant le porteur. [20]", level: 'Débutant' },
+            { title: 'Couverture de la "Maison"', scenario: "En zone défensive, votre corps doit toujours être entre l'attaquant et le filet. Protégez l'enclave avant tout. [7]", level: 'Débutant' },
+            { title: "Pincer' à la Ligne Bleue", scenario: "Apprenez à lire le jeu pour savoir quand vous pouvez agressivement garder la rondelle en zone offensive sans vous faire prendre à contre-pied. [1]", level: 'Intermédiaire' }
+        ],
+        tirPasse: [
+            { title: 'Tir des poignets rapide', scenario: "Depuis la ligne bleue, exercez-vous à prendre un tir des poignets rapidement après une passe. La vitesse de lancer surprend les gardiens. [16]", level: 'Débutant' },
+            { title: 'Passe de sortie de zone', scenario: "Sous pression, utilisez la bande pour faire une passe indirecte sécuritaire à votre ailier.", level: 'Débutant' },
+            { title: 'Tirs bas pour déviations', scenario: "Visez les jambières du gardien. Un tir bas et dur est plus facile à dévier pour vos attaquants et peut créer des retours.", level: 'Intermédiaire' }
+        ]
+    };
 
-function startQuiz(levelNum) {
-    currentQuizNum = levelNum;
-    const quiz = quizzes[levelNum];
-    document.getElementById('quiz-title').innerText = quiz.title;
-    
-    const modal = document.getElementById('quiz-modal');
-    displayQuestion(0);
-    modal.style.display = "block";
-}
+    // ======== STATE ========
+    let state = {
+        currentLevel: 'Débutant',
+        playerStats: { points: 0, testsCompleted: 0, streak: 0 },
+        currentTest: null,
+        testAnswers: {},
+    };
 
-function displayQuestion(questionIndex) {
-    const quiz = quizzes[currentQuizNum];
-    const question = quiz.questions[questionIndex];
-    
-    document.getElementById('quiz-question').innerText = question.question;
-    const optionsContainer = document.getElementById('quiz-options');
-    optionsContainer.innerHTML = '';
-    selectedOption = null;
+    // ======== DOM ELEMENTS ========
+    const views = document.querySelectorAll('.view');
+    const dashboardView = document.getElementById('dashboard-view');
+    const moduleView = document.getElementById('module-view');
+    const testView = document.getElementById('test-view');
+    const resultsView = document.getElementById('results-view');
+    const navDashboardBtn = document.getElementById('nav-dashboard');
 
-    question.options.forEach(option => {
-        const button = document.createElement('button');
-        button.innerText = option;
-        button.onclick = () => {
-            if(selectedOption) {
-                selectedOption.classList.remove('selected');
+    // ======== RENDER FUNCTIONS ========
+
+    function renderDashboard() {
+        document.getElementById('current-level-display').textContent = state.currentLevel;
+        document.getElementById('stats-points').textContent = state.playerStats.points;
+        document.getElementById('stats-tests').textContent = state.playerStats.testsCompleted;
+        document.getElementById('stats-streak').textContent = state.playerStats.streak;
+
+        const modulesContainer = document.getElementById('modules-container');
+        modulesContainer.innerHTML = '';
+        for (const key in modules) {
+            const module = modules[key];
+            const btn = document.createElement('button');
+            btn.className = `module-btn ${module.color}`;
+            btn.innerHTML = `<i class="${module.icon} icon"></i><p>${module.title}</p>`;
+            btn.onclick = () => renderModule(key);
+            modulesContainer.appendChild(btn);
+        }
+
+        const testContainer = document.getElementById('level-test-container');
+        if (state.currentLevel !== 'Elite') {
+            const nextLevel = levels[levels.indexOf(state.currentLevel) + 1];
+            testContainer.innerHTML = `
+                <p>Prêt à passer au niveau <strong>${nextLevel}</strong> ?</p>
+                <button id="start-test-btn" class="btn btn-red">
+                    <i class="fa-solid fa-play icon-left"></i>Commencer le Test
+                </button>`;
+            document.getElementById('start-test-btn').onclick = () => startTest(state.currentLevel);
+        } else {
+            testContainer.innerHTML = `<p class="font-bold">🏆 Niveau Maximum Atteint!</p>`;
+        }
+        showView('dashboard-view');
+    }
+
+    function renderModule(moduleKey) {
+        const module = modules[moduleKey];
+        const moduleExercises = exercises[moduleKey]?.filter(ex => levels.indexOf(ex.level) <= levels.indexOf(state.currentLevel)) || [];
+        
+        moduleView.innerHTML = `
+            <div class="module-header ${module.color}">
+                <div style="display: flex; align-items: center;">
+                    <i class="${module.icon} icon"></i>
+                    <div>
+                        <h2>${module.title}</h2>
+                        <p>Exercices pour le niveau ${state.currentLevel}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                ${moduleExercises.map(ex => `
+                    <div class="exercise-card ${module.color}">
+                        <h4>${ex.title}</h4>
+                        <p>${ex.scenario}</p>
+                    </div>
+                `).join('') || '<p>Aucun exercice pour ce module au niveau actuel.</p>'}
+            </div>`;
+        showView('module-view');
+    }
+
+    function startTest(level) {
+        state.currentTest = levelTests[level];
+        state.testAnswers = {};
+        
+        testView.innerHTML = `
+            <div class="card">
+                <h2>${state.currentTest.title}</h2>
+                <p>Répondez à toutes les questions. Un score de 80% est requis pour passer.</p>
+            </div>
+            ${state.currentTest.questions.map((q, index) => `
+                <div class="card test-question">
+                    <p class="font-bold">${index + 1}. ${q.question}</p>
+                    <div class="options-container" data-q-index="${index}">
+                        ${q.options.map((opt, oIndex) => `
+                            <button class="option-btn" data-o-index="${oIndex}">${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('')}
+            <button id="submit-test-btn" class="btn btn-green" disabled>Soumettre le Test</button>
+        `;
+
+        testView.querySelectorAll('.options-container').forEach(container => {
+            container.addEventListener('click', (e) => {
+                if (e.target.classList.contains('option-btn')) {
+                    const qIndex = container.dataset.qIndex;
+                    const oIndex = e.target.dataset.oIndex;
+                    state.testAnswers[qIndex] = parseInt(oIndex);
+
+                    container.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+                    e.target.classList.add('selected');
+
+                    document.getElementById('submit-test-btn').disabled = Object.keys(state.testAnswers).length !== state.currentTest.questions.length;
+                }
+            });
+        });
+        
+        document.getElementById('submit-test-btn').onclick = submitTest;
+        showView('test-view');
+    }
+
+    function submitTest() {
+        let correct = 0;
+        state.currentTest.questions.forEach((q, index) => {
+            if(state.testAnswers[index] === q.correct) correct++;
+        });
+        const score = (correct / state.currentTest.questions.length) * 100;
+        const passed = score >= 80;
+
+        if (passed) {
+            const currentIndex = levels.indexOf(state.currentLevel);
+            if (currentIndex < levels.length - 1) {
+                state.currentLevel = levels[currentIndex + 1];
             }
-            selectedOption = button;
-            selectedOption.classList.add('selected');
-        };
-        optionsContainer.appendChild(button);
-    });
-    
-    document.getElementById('quiz-feedback').innerText = '';
-    document.getElementById('quiz-submit-btn').style.display = 'block';
+            state.playerStats.points += 100;
+            state.playerStats.testsCompleted += 1;
+            state.playerStats.streak += 1;
+        } else {
+            state.playerStats.streak = 0;
+        }
 
-}
-
-
-function submitQuiz() {
-    if (!selectedOption) {
-        alert("Choisis une réponse !");
-        return;
-    }
-
-    const quiz = quizzes[currentQuizNum];
-    // Pour ce cas simple, on ne gère qu'une question à la fois.
-    const currentQuestion = quiz.questions[0]; 
-    const feedback = document.getElementById('quiz-feedback');
-
-    if (selectedOption.innerText === currentQuestion.answer) {
-        feedback.innerText = "Bonne réponse ! Niveau débloqué !";
-        feedback.style.color = 'green';
-        unlockNextLevel(currentQuizNum);
-        setTimeout(closeQuiz, 2000);
-    } else {
-        feedback.innerText = "Mauvaise réponse. Revois tes classiques et réessaie !";
-        feedback.style.color = 'red';
-    }
-     document.getElementById('quiz-submit-btn').style.display = 'none';
-}
-
-
-function closeQuiz() {
-    document.getElementById('quiz-modal').style.display = "none";
-}
-
-function unlockNextLevel(levelNum) {
-    const nextLevelNum = levelNum + 1;
-    const nextLevel = document.getElementById(`level-${nextLevelNum}`);
-    if (nextLevel) {
-        nextLevel.classList.remove('locked');
-        nextLevel.innerHTML += getLevelContent(nextLevelNum); // Ajoute le contenu du niveau
-        updateProgress();
-    }
-    localStorage.setItem(`level-${nextLevelNum}-unlocked`, 'true');
-}
-
-function getLevelContent(levelNum) {
-    if (levelNum === 2) {
-        return `
-            <div class="skill-category">
-                <h3><i class="fas fa-map-marker-alt"></i> Positionnement</h3>
-                <div class="exercise" data-skill="positioning-2">
-                    <input type="checkbox" id="pos2-1" onchange="updateProgress()">
-                    <label for="pos2-1"><strong>Jeu à la ligne bleue offensive :</strong> Apprends quand 'pincer' pour garder la rondelle en zone offensive et quand reculer pour éviter un 2 contre 1. [1] C'est une question de lecture de jeu.</label>
-                </div>
-            </div>
-             <div class="skill-category">
-                <h3><i class="fas fa-bullseye"></i> Tirs</h3>
-                <div class="exercise" data-skill="shooting-2">
-                    <input type="checkbox" id="shoot2-1" onchange="updateProgress()">
-                    <label for="shoot2-1"><strong>Tirs bas pour déviations :</strong> Au lieu de toujours viser la lucarne, entraîne-toi à tirer bas et fort en direction du but pour que tes attaquants puissent dévier la rondelle.</label>
-                </div>
-            </div>
-            <button class="quiz-btn" id="quiz2-btn" onclick="startQuiz(2)" disabled>Quiz du Niveau 2</button>
-        `;
-    }
-     if (levelNum === 3) {
-        return `
-            <div class="skill-category">
-                <h3><i class="fas fa-map-marker-alt"></i> Intelligence de Jeu</h3>
-                <div class="exercise" data-skill="gameiq-3">
-                    <input type="checkbox" id="gi3-1" onchange="updateProgress()">
-                    <label for="gi3-1"><strong>Lecture de la montée (Rush Reading) :</strong> Analyse rapidement la situation (2 contre 1, 3 contre 2) et communique avec ton partenaire pour savoir qui prend le porteur de la rondelle et qui couvre la passe. [20]</label>
-                </div>
-            </div>
-        `;
-    }
-    return '';
-}
-
-// Sauvegarde et chargement de la progression
-function saveProgress() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-        localStorage.setItem(cb.id, cb.checked);
-    });
-}
-
-function loadProgress() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-        const isChecked = localStorage.getItem(cb.id) === 'true';
-        cb.checked = isChecked;
-    });
-
-    if (localStorage.getItem('level-2-unlocked') === 'true') {
-        const level2 = document.getElementById('level-2');
-        level2.classList.remove('locked');
-        level2.innerHTML = `<h2>Niveau 2 : Maîtrise Tactique</h2>` + getLevelContent(2);
-    }
-    if (localStorage.getItem('level-3-unlocked') === 'true') {
-         const level3 = document.getElementById('level-3');
-        level3.classList.remove('locked');
-        level3.innerHTML = `<h2>Niveau 3 : Le Défenseur d'Élite</h2>` + getLevelContent(3);
+        renderTestResults({ score, passed, correct, total: state.currentTest.questions.length });
     }
     
-    // Re-check checkboxes after loading dynamic content
-     const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-    allCheckboxes.forEach(cb => {
-        const isChecked = localStorage.getItem(cb.id) === 'true';
-        cb.checked = isChecked;
-    });
+    function renderTestResults(results) {
+        resultsView.innerHTML = `
+            <div class="card results-card">
+                ${results.passed ? `
+                    <i class="far fa-check-circle icon"></i>
+                    <h2 style="color: var(--green-600);">Félicitations !</h2>
+                    <p>Vous avez passé au niveau <strong>${state.currentLevel}</strong> !</p>
+                ` : `
+                    <i class="far fa-times-circle icon"></i>
+                    <h2 style="color: var(--red-600);">Test Échoué</h2>
+                    <p>Continuez à vous entraîner et réessayez !</p>
+                `}
+                <div class="results-feedback">
+                    <p class="score">${results.score.toFixed(0)}%</p>
+                    <p>${results.correct} / ${results.total} réponses correctes</p>
+                </div>
+                <button id="back-to-dashboard-btn" class="btn btn-blue">Retour au Tableau de Bord</button>
+            </div>
+        `;
+        document.getElementById('back-to-dashboard-btn').onclick = renderDashboard;
+        showView('results-view');
+    }
 
-    updateProgress();
-}
+    // ======== UTILITY FUNCTIONS ========
+    function showView(viewId) {
+        views.forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // ======== INITIALIZATION ========
+    navDashboardBtn.onclick = renderDashboard;
+    renderDashboard();
+});
