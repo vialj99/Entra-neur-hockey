@@ -1,19 +1,3 @@
-Salut jeune défenseur ! Prêt à passer au niveau supérieur ?
-
-Voici ton entraîneur personnel de hockey sur glace. Il est conçu spécialement pour toi, pour t'aider à devenir un pilier à la ligne bleue. Au programme : des exercices ciblés, des quiz pour tester tes connaissances et un système de niveaux pour suivre ta progression.
-
-Choisis une compétence à développer et lance-toi !
-
-Instructions :
-
-Copie le code ci-dessous dans trois fichiers distincts : index.html, style.css, et script.js.
-
-Ouvre le fichier index.html dans ton navigateur web.
-
-Commence ton entraînement ! Coche les exercices au fur et à mesure et valide tes acquis avec les quiz pour débloquer les niveaux suivants.
-
-index.html
-Generated html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -103,7 +87,8 @@ Generated html
     <script src="script.js"></script>
 </body>
 </html>
-
+Use code with caution.
+Html
 style.css
 Generated css
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
@@ -256,12 +241,8 @@ header h1 {
     font-size: 1.1em;
     font-weight: bold;
 }
-IGNORE_WHEN_COPYING_START
-content_copy
-download
 Use code with caution.
 Css
-IGNORE_WHEN_COPYING_END
 script.js
 Generated javascript
 document.addEventListener('DOMContentLoaded', function() {
@@ -460,17 +441,3 @@ function loadProgress() {
 
     updateProgress();
 }
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-JavaScript
-IGNORE_WHEN_COPYING_END
-Google Search Suggestions
-Display of Search Suggestions is required when using Grounding with Google Search. Learn more
-exercices pour défenseur hockey sur glace positionnement
-exercices de tir pour défenseur hockey sur glace
-exercices technique pour défenseur hockey sur glace
-exercices intelligence de jeu pour défenseur hockey sur glace
-tutoriels en ligne pour défenseur de hockey sur glace
-exemples de quiz interactifs en HTML CSS JavaScript
