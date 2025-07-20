@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entraîneur Personnalisé - Défenseur de Hockey</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Ton Entraîneur Personnel de Hockey</h1>
+        <p>Spécialisé pour les défenseurs</p>
+    </header>
+
+    <main id="trainer-container">
+
+        <!-- NIVEAU 1 -->
+        <section id="level-1" class="level">
+            <h2>Niveau 1 : Les Fondamentaux du Défenseur</h2>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-map-marker-alt"></i> Positionnement</h3>
+                <div class="exercise" data-skill="positioning-1">
+                    <input type="checkbox" id="pos1-1" onchange="updateProgress()">
+                    <label for="pos1-1"><strong>Protéger la "maison" :</strong> En zone défensive, ta priorité est de protéger l'enclave (la zone devant ton filet). [7] Apprends à toujours garder ton corps entre l'adversaire et le but. Patrouille la zone, la tête haute, pour anticiper les passes dangereuses.</label>
+                </div>
+                 <div class="exercise" data-skill="positioning-1">
+                    <input type="checkbox" id="pos1-2" onchange="updateProgress()">
+                    <label for="pos1-2"><strong>Contrôle de l'écart (Gap Control) :</strong> Maintiens une distance d'environ une longueur de bâton avec l'attaquant. [3] Cela te permet de le harceler sans te faire déborder facilement.</label>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-bullseye"></i> Tirs</h3>
+                <div class="exercise" data-skill="shooting-1">
+                    <input type="checkbox" id="shoot1-1" onchange="updateProgress()">
+                    <label for="shoot1-1"><strong>Le tir des poignets :</strong> Entraîne-toi à décocher un tir des poignets rapide et précis depuis la ligne bleue. La clé est un bon transfert de poids de ta jambe arrière vers ta jambe avant. [16]</label>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-cogs"></i> Technique</h3>
+                 <div class="exercise" data-skill="technique-1">
+                    <input type="checkbox" id="tech1-1" onchange="updateProgress()">
+                    <label for="tech1-1"><strong>Patinage arrière et pivots :</strong> La fluidité de ton patinage est cruciale. Pratique les départs rapides en arrière et les pivots pour passer de la marche avant à la marche arrière sans perdre de vitesse. [9]</label>
+                </div>
+            </div>
+
+             <div class="skill-category">
+                <h3><i class="fas fa-brain"></i> Intelligence de jeu</h3>
+                <div class="exercise" data-skill="gameiq-1">
+                    <input type="checkbox" id="gi1-1" onchange="updateProgress()">
+                    <label for="gi1-1"><strong>Communication :</strong> Parle constamment avec ton partenaire de défense et ton gardien. Annonce la pression ("temps!", "dans ton dos!") et les options de passe. Une bonne communication évite les erreurs.</label>
+                </div>
+            </div>
+
+            <button class="quiz-btn" id="quiz1-btn" onclick="startQuiz(1)" disabled>Quiz du Niveau 1</button>
+        </section>
+
+        <!-- NIVEAU 2 -->
+        <section id="level-2" class="level locked">
+            <h2>Niveau 2 : Maîtrise Tactique</h2>
+             <!-- Contenu du niveau 2 sera débloqué par le JavaScript -->
+        </section>
+
+        <!-- NIVEAU 3 -->
+        <section id="level-3" class="level locked">
+             <h2>Niveau 3 : Le Défenseur d'Élite</h2>
+             <!-- Contenu du niveau 3 sera débloqué par le JavaScript -->
+        </section>
+
+    </main>
+
+    <div id="quiz-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeQuiz()">×</span>
+            <h2 id="quiz-title">Quiz</h2>
+            <div id="quiz-question"></div>
+            <div id="quiz-options"></div>
+            <button id="quiz-submit-btn" onclick="submitQuiz()">Valider</button>
+            <div id="quiz-feedback"></div>
+        </div>
+    </div>
+    
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
