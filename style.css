@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    background-color: #00205b;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.level {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: opacity 0.5s;
+}
+
+.level.locked {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.level.locked::after {
+    content: '🔒 Verrouillé';
+    font-size: 1.5em;
+    color: #a0a0a0;
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+.skill-category {
+    margin-bottom: 25px;
+}
+
+.skill-category h3 {
+    color: #00205b;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.exercise {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.exercise input[type="checkbox"] {
+    margin-right: 15px;
+    margin-top: 5px;
+    min-width: 18px;
+    min-height: 18px;
+}
+
+.quiz-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.quiz-btn:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.quiz-btn:not(:disabled):hover {
+    background-color: #218838;
+}
+
+/* Modal Quiz */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 30px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#quiz-options button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    cursor: pointer;
+}
+
+#quiz-options button.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+
+#quiz-feedback {
+    margin-top: 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
