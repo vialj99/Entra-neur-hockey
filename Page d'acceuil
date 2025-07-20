@@ -1,572 +1,476 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronRight, Trophy, Target, Brain, Zap, CheckCircle, XCircle, Star, Medal, Book, Play } from 'lucide-react';
+Salut jeune défenseur ! Prêt à passer au niveau supérieur ?
 
-const HockeyTrainer = () => {
-  const [currentLevel, setCurrentLevel] = useState('Débutant');
-  const [currentModule, setCurrentModule] = useState('dashboard');
-  const [playerStats, setPlayerStats] = useState({
-    totalPoints: 0,
-    testsCompleted: 0,
-    dailyChallengesCompleted: 0,
-    currentStreak: 0
-  });
-  const [testResults, setTestResults] = useState({});
-  const [currentTest, setCurrentTest] = useState(null);
-  const [testAnswers, setTestAnswers] = useState({});
-  const [showTestResults, setShowTestResults] = useState(false);
+Voici ton entraîneur personnel de hockey sur glace. Il est conçu spécialement pour toi, pour t'aider à devenir un pilier à la ligne bleue. Au programme : des exercices ciblés, des quiz pour tester tes connaissances et un système de niveaux pour suivre ta progression.
 
-  const levels = ['Débutant', 'Intermédiaire', 'Avancé', 'Elite'];
-  
-  const modules = {
-    positionnement: {
-      title: 'Positionnement',
-      icon: Target,
-      description: 'Maîtrisez les positions défensives optimales',
-      color: 'bg-blue-500'
+Choisis une compétence à développer et lance-toi !
+
+Instructions :
+
+Copie le code ci-dessous dans trois fichiers distincts : index.html, style.css, et script.js.
+
+Ouvre le fichier index.html dans ton navigateur web.
+
+Commence ton entraînement ! Coche les exercices au fur et à mesure et valide tes acquis avec les quiz pour débloquer les niveaux suivants.
+
+index.html
+Generated html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entraîneur Personnalisé - Défenseur de Hockey</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Ton Entraîneur Personnel de Hockey</h1>
+        <p>Spécialisé pour les défenseurs</p>
+    </header>
+
+    <main id="trainer-container">
+
+        <!-- NIVEAU 1 -->
+        <section id="level-1" class="level">
+            <h2>Niveau 1 : Les Fondamentaux du Défenseur</h2>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-map-marker-alt"></i> Positionnement</h3>
+                <div class="exercise" data-skill="positioning-1">
+                    <input type="checkbox" id="pos1-1" onchange="updateProgress()">
+                    <label for="pos1-1"><strong>Protéger la "maison" :</strong> En zone défensive, ta priorité est de protéger l'enclave (la zone devant ton filet). [7] Apprends à toujours garder ton corps entre l'adversaire et le but. Patrouille la zone, la tête haute, pour anticiper les passes dangereuses.</label>
+                </div>
+                 <div class="exercise" data-skill="positioning-1">
+                    <input type="checkbox" id="pos1-2" onchange="updateProgress()">
+                    <label for="pos1-2"><strong>Contrôle de l'écart (Gap Control) :</strong> Maintiens une distance d'environ une longueur de bâton avec l'attaquant. [3] Cela te permet de le harceler sans te faire déborder facilement.</label>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-bullseye"></i> Tirs</h3>
+                <div class="exercise" data-skill="shooting-1">
+                    <input type="checkbox" id="shoot1-1" onchange="updateProgress()">
+                    <label for="shoot1-1"><strong>Le tir des poignets :</strong> Entraîne-toi à décocher un tir des poignets rapide et précis depuis la ligne bleue. La clé est un bon transfert de poids de ta jambe arrière vers ta jambe avant. [16]</label>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-cogs"></i> Technique</h3>
+                 <div class="exercise" data-skill="technique-1">
+                    <input type="checkbox" id="tech1-1" onchange="updateProgress()">
+                    <label for="tech1-1"><strong>Patinage arrière et pivots :</strong> La fluidité de ton patinage est cruciale. Pratique les départs rapides en arrière et les pivots pour passer de la marche avant à la marche arrière sans perdre de vitesse. [9]</label>
+                </div>
+            </div>
+
+             <div class="skill-category">
+                <h3><i class="fas fa-brain"></i> Intelligence de jeu</h3>
+                <div class="exercise" data-skill="gameiq-1">
+                    <input type="checkbox" id="gi1-1" onchange="updateProgress()">
+                    <label for="gi1-1"><strong>Communication :</strong> Parle constamment avec ton partenaire de défense et ton gardien. Annonce la pression ("temps!", "dans ton dos!") et les options de passe. Une bonne communication évite les erreurs.</label>
+                </div>
+            </div>
+
+            <button class="quiz-btn" id="quiz1-btn" onclick="startQuiz(1)" disabled>Quiz du Niveau 1</button>
+        </section>
+
+        <!-- NIVEAU 2 -->
+        <section id="level-2" class="level locked">
+            <h2>Niveau 2 : Maîtrise Tactique</h2>
+             <!-- Contenu du niveau 2 sera débloqué par le JavaScript -->
+        </section>
+
+        <!-- NIVEAU 3 -->
+        <section id="level-3" class="level locked">
+             <h2>Niveau 3 : Le Défenseur d'Élite</h2>
+             <!-- Contenu du niveau 3 sera débloqué par le JavaScript -->
+        </section>
+
+    </main>
+
+    <div id="quiz-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeQuiz()">×</span>
+            <h2 id="quiz-title">Quiz</h2>
+            <div id="quiz-question"></div>
+            <div id="quiz-options"></div>
+            <button id="quiz-submit-btn" onclick="submitQuiz()">Valider</button>
+            <div id="quiz-feedback"></div>
+        </div>
+    </div>
+    
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+style.css
+Generated css
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    background-color: #00205b;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.level {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: opacity 0.5s;
+}
+
+.level.locked {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.level.locked::after {
+    content: '🔒 Verrouillé';
+    font-size: 1.5em;
+    color: #a0a0a0;
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+.skill-category {
+    margin-bottom: 25px;
+}
+
+.skill-category h3 {
+    color: #00205b;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.exercise {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.exercise input[type="checkbox"] {
+    margin-right: 15px;
+    margin-top: 5px;
+    min-width: 18px;
+    min-height: 18px;
+}
+
+.quiz-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.quiz-btn:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.quiz-btn:not(:disabled):hover {
+    background-color: #218838;
+}
+
+/* Modal Quiz */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 30px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#quiz-options button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    cursor: pointer;
+}
+
+#quiz-options button.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+
+#quiz-feedback {
+    margin-top: 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Css
+IGNORE_WHEN_COPYING_END
+script.js
+Generated javascript
+document.addEventListener('DOMContentLoaded', function() {
+    loadProgress();
+});
+
+const quizzes = {
+    1: {
+        title: "Quiz du Niveau 1",
+        questions: [
+            {
+                question: "Quelle est la priorité absolue d'un défenseur dans sa propre zone ?",
+                options: ["Faire une longue passe pour l'attaque", "Protéger la 'maison' (l'enclave)", "Mettre en échec le porteur de la rondelle n'importe où"],
+                answer: "Protéger la 'maison' (l'enclave)"
+            },
+            {
+                question: "Quelle est la distance idéale à maintenir avec un attaquant (Gap Control) ?",
+                options: ["Le plus près possible", "À deux longueurs de bâton", "Environ une longueur de bâton"],
+                answer: "Environ une longueur de bâton"
+            }
+        ]
     },
-    tirPasse: {
-      title: 'Tir & Passe',
-      icon: Zap,
-      description: 'Perfectionnez vos tirs et passes défensives',
-      color: 'bg-green-500'
-    },
-    technique: {
-      title: 'Technique',
-      icon: Star,
-      description: 'Développez vos compétences techniques',
-      color: 'bg-purple-500'
-    },
-    intelligence: {
-      title: 'Intelligence de Jeu',
-      icon: Brain,
-      description: 'Améliorez votre lecture du jeu',
-      color: 'bg-orange-500'
+    2: {
+        title: "Quiz du Niveau 2",
+        questions: [
+            {
+                question: "Quand un défenseur devrait-il 'pincer' (pinch) à la ligne bleue offensive ?",
+                options: ["À chaque fois que la rondelle est près des bandes", "Seulement s'il est certain de récupérer la rondelle", "Jamais, c'est trop risqué"],
+                answer: "Seulement s'il est certain de récupérer la rondelle"
+            }
+        ]
     }
-  };
-
-  const levelTests = {
-    'Débutant': {
-      title: 'Test de Passage - Niveau Intermédiaire',
-      questions: [
-        {
-          question: "Quelle est la position optimale d'un défenseur lors d'un 2 contre 1?",
-          options: [
-            "Se placer entre les deux attaquants",
-            "Forcer le porteur vers l'extérieur tout en gardant un œil sur le passeur",
-            "Attaquer directement le porteur",
-            "Rester devant le filet"
-          ],
-          correct: 1
-        },
-        {
-          question: "Quel type de passe un défenseur doit-il privilégier en sortie de zone?",
-          options: [
-            "Passe haute et longue",
-            "Passe courte et précise le long de la bande",
-            "Passe au centre de la patinoire",
-            "Dégagement sans regarder"
-          ],
-          correct: 1
-        },
-        {
-          question: "Comment doit-on patiner en reculant face à un attaquant?",
-          options: [
-            "Regard fixé sur la rondelle",
-            "Patins parallèles, regard sur le torse de l'attaquant",
-            "En croisant les patins",
-            "Le plus vite possible sans technique"
-          ],
-          correct: 1
-        },
-        {
-          question: "Que fait un défenseur quand son partenaire défensif sort de position?",
-          options: [
-            "Il reste à sa place",
-            "Il couvre temporairement sa zone",
-            "Il monte à l'attaque",
-            "Il crie sur son coéquipier"
-          ],
-          correct: 1
-        },
-        {
-          question: "Quel est le meilleur angle pour un tir de défenseur?",
-          options: [
-            "Tir direct sans préparation",
-            "Tir bas vers les jambières",
-            "Tir à hauteur de genoux avec déviation possible",
-            "Tir le plus fort possible"
-          ],
-          correct: 2
-        }
-      ]
-    },
-    'Intermédiaire': {
-      title: 'Test de Passage - Niveau Avancé',
-      questions: [
-        {
-          question: "Dans un système défensif 'box + 1', quel est le rôle du défenseur mobile?",
-          options: [
-            "Rester statique devant le filet",
-            "Presser le porteur et couper les lignes de passe",
-            "Couvrir uniquement la zone haute",
-            "Suivre un attaquant spécifique"
-          ],
-          correct: 1
-        },
-        {
-          question: "Comment gérer un attaquant qui fait du 'cycling' derrière votre filet?",
-          options: [
-            "Le suivre partout",
-            "Rester devant le filet",
-            "Coordonner avec le partenaire pour le serrer progressivement",
-            "Laisser le gardien s'en occuper"
-          ],
-          correct: 2
-        },
-        {
-          question: "Quelle technique utiliser pour un tir frappé efficace depuis la ligne bleue?",
-          options: [
-            "Transfert de poids arrière vers avant, flex maximal du bâton",
-            "Mouvement rapide des bras seulement",
-            "Position statique et force des épaules",
-            "Élan le plus long possible"
-          ],
-          correct: 0
-        },
-        {
-          question: "Comment lire une attaque à 3 joueurs en zone offensive adverse?",
-          options: [
-            "Marquer l'homme le plus proche",
-            "Identifier le danger primaire et ajuster selon les mouvements",
-            "Toujours rester au centre",
-            "Attendre que l'attaque se développe"
-          ],
-          correct: 1
-        },
-        {
-          question: "Quelle est la meilleure façon de sortir la rondelle sous pression?",
-          options: [
-            "Dégagement aveugle",
-            "Passe courte à un coéquipier démarqué ou dégagement contrôlé",
-            "Toujours passer au centre",
-            "Garder la rondelle le plus longtemps possible"
-          ],
-          correct: 1
-        }
-      ]
-    }
-  };
-
-  const dailyChallenges = {
-    'Débutant': [
-      "Visualisez 5 situations de 2 contre 1 et identifiez la bonne position",
-      "Pratiquez 10 passes précises le long de la bande mentalement",
-      "Analysez 3 séquences de patinage arrière"
-    ],
-    'Intermédiaire': [
-      "Résolvez 3 situations de jeu complexes en zone défensive",
-      "Perfectionnez votre technique de tir frappé (visualisation)",
-      "Étudiez 5 systèmes défensifs différents"
-    ],
-    'Avancé': [
-      "Maîtrisez les transitions défense-attaque",
-      "Analysez des jeux de puissance adverses",
-      "Perfectionnez la communication défensive"
-    ]
-  };
-
-  const startTest = (level) => {
-    setCurrentTest(levelTests[level]);
-    setTestAnswers({});
-    setShowTestResults(false);
-  };
-
-  const answerQuestion = (questionIndex, answerIndex) => {
-    setTestAnswers(prev => ({
-      ...prev,
-      [questionIndex]: answerIndex
-    }));
-  };
-
-  const submitTest = () => {
-    const questions = currentTest.questions;
-    let correct = 0;
-    
-    questions.forEach((question, index) => {
-      if (testAnswers[index] === question.correct) {
-        correct++;
-      }
-    });
-    
-    const score = (correct / questions.length) * 100;
-    const passed = score >= 80;
-    
-    setTestResults({
-      score,
-      passed,
-      correct,
-      total: questions.length
-    });
-    
-    if (passed) {
-      const currentIndex = levels.indexOf(currentLevel);
-      if (currentIndex < levels.length - 1) {
-        setCurrentLevel(levels[currentIndex + 1]);
-      }
-      setPlayerStats(prev => ({
-        ...prev,
-        totalPoints: prev.totalPoints + 100,
-        testsCompleted: prev.testsCompleted + 1
-      }));
-    }
-    
-    setShowTestResults(true);
-  };
-
-  const renderDashboard = () => (
-    <div className="space-y-6">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
-        <h2 className="text-2xl font-bold mb-2">Bienvenue, Défenseur!</h2>
-        <p className="text-lg">Niveau actuel: <span className="font-bold">{currentLevel}</span></p>
-        <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center">
-            <Trophy className="h-8 w-8 mx-auto mb-1" />
-            <p className="text-sm">Points</p>
-            <p className="font-bold">{playerStats.totalPoints}</p>
-          </div>
-          <div className="text-center">
-            <Medal className="h-8 w-8 mx-auto mb-1" />
-            <p className="text-sm">Tests Réussis</p>
-            <p className="font-bold">{playerStats.testsCompleted}</p>
-          </div>
-          <div className="text-center">
-            <Target className="h-8 w-8 mx-auto mb-1" />
-            <p className="text-sm">Défis Quotidiens</p>
-            <p className="font-bold">{playerStats.dailyChallengesCompleted}</p>
-          </div>
-          <div className="text-center">
-            <Star className="h-8 w-8 mx-auto mb-1" />
-            <p className="text-sm">Série Actuelle</p>
-            <p className="font-bold">{playerStats.currentStreak}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-bold mb-4 flex items-center">
-            <Book className="h-6 w-6 mr-2 text-blue-500" />
-            Modules d'Entraînement
-          </h3>
-          <div className="grid grid-cols-2 gap-3">
-            {Object.entries(modules).map(([key, module]) => {
-              const IconComponent = module.icon;
-              return (
-                <button
-                  key={key}
-                  onClick={() => setCurrentModule(key)}
-                  className={`${module.color} text-white p-3 rounded-lg hover:opacity-90 transition-opacity`}
-                >
-                  <IconComponent className="h-6 w-6 mx-auto mb-1" />
-                  <p className="text-sm font-semibold">{module.title}</p>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-bold mb-4">Test de Niveau</h3>
-          {currentLevel !== 'Elite' && (
-            <div className="space-y-3">
-              <p className="text-gray-600">Passez au niveau {levels[levels.indexOf(currentLevel) + 1]}</p>
-              <button
-                onClick={() => startTest(currentLevel)}
-                className="w-full bg-red-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-600 transition-colors flex items-center justify-center"
-              >
-                <Play className="h-5 w-5 mr-2" />
-                Commencer le Test
-              </button>
-            </div>
-          )}
-          {currentLevel === 'Elite' && (
-            <p className="text-green-600 font-semibold">🏆 Niveau Maximum Atteint!</p>
-          )}
-        </div>
-      </div>
-
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h3 className="text-xl font-bold mb-4">Défis Quotidiens - {currentLevel}</h3>
-        <div className="space-y-2">
-          {dailyChallenges[currentLevel]?.map((challenge, index) => (
-            <div key={index} className="flex items-center p-3 bg-gray-50 rounded-lg">
-              <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-              <span className="text-gray-700">{challenge}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderModule = (moduleKey) => {
-    const module = modules[moduleKey];
-    const IconComponent = module.icon;
-    
-    return (
-      <div className="space-y-6">
-        <div className={`${module.color} text-white p-6 rounded-lg`}>
-          <div className="flex items-center mb-4">
-            <IconComponent className="h-8 w-8 mr-3" />
-            <h2 className="text-2xl font-bold">{module.title}</h2>
-          </div>
-          <p className="text-lg opacity-90">{module.description}</p>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-bold mb-4">Exercices - Niveau {currentLevel}</h3>
-          
-          {moduleKey === 'positionnement' && (
-            <div className="space-y-4">
-              <div className="border-l-4 border-blue-500 pl-4">
-                <h4 className="font-semibold mb-2">Situation 2 contre 1</h4>
-                <p className="text-gray-600 mb-3">L'attaquant arrive avec la rondelle, un coéquipier l'accompagne. Quelle est votre position?</p>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                  Analyser la Situation
-                </button>
-              </div>
-              
-              <div className="border-l-4 border-blue-500 pl-4">
-                <h4 className="font-semibold mb-2">Couverture de Zone</h4>
-                <p className="text-gray-600 mb-3">Votre partenaire défensif est sorti de position. Comment réagissez-vous?</p>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                  Voir les Options
-                </button>
-              </div>
-            </div>
-          )}
-
-          {moduleKey === 'tirPasse' && (
-            <div className="space-y-4">
-              <div className="border-l-4 border-green-500 pl-4">
-                <h4 className="font-semibold mb-2">Tir Frappé depuis la Pointe</h4>
-                <p className="text-gray-600 mb-3">Technique pour un tir précis et puissant depuis la ligne bleue.</p>
-                <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                  Voir la Technique
-                </button>
-              </div>
-              
-              <div className="border-l-4 border-green-500 pl-4">
-                <h4 className="font-semibold mb-2">Passe de Sortie</h4>
-                <p className="text-gray-600 mb-3">Comment effectuer une passe précise sous pression.</p>
-                <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                  Pratiquer
-                </button>
-              </div>
-            </div>
-          )}
-
-          {moduleKey === 'technique' && (
-            <div className="space-y-4">
-              <div className="border-l-4 border-purple-500 pl-4">
-                <h4 className="font-semibold mb-2">Patinage Arrière</h4>
-                <p className="text-gray-600 mb-3">Perfectionnez votre technique de patinage défensif.</p>
-                <button className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
-                  Exercices Techniques
-                </button>
-              </div>
-              
-              <div className="border-l-4 border-purple-500 pl-4">
-                <h4 className="font-semibold mb-2">Transitions</h4>
-                <p className="text-gray-600 mb-3">Maîtrisez les changements de direction rapides.</p>
-                <button className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
-                  Entraînement
-                </button>
-              </div>
-            </div>
-          )}
-
-          {moduleKey === 'intelligence' && (
-            <div className="space-y-4">
-              <div className="border-l-4 border-orange-500 pl-4">
-                <h4 className="font-semibold mb-2">Lecture du Jeu</h4>
-                <p className="text-gray-600 mb-3">Anticipez les mouvements offensifs adverses.</p>
-                <button className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
-                  Quiz Tactique
-                </button>
-              </div>
-              
-              <div className="border-l-4 border-orange-500 pl-4">
-                <h4 className="font-semibold mb-2">Communication</h4>
-                <p className="text-gray-600 mb-3">Coordonnez efficacement avec vos coéquipiers.</p>
-                <button className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
-                  Scénarios
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const renderTest = () => (
-    <div className="max-w-3xl mx-auto">
-      <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-        <h2 className="text-2xl font-bold mb-4">{currentTest.title}</h2>
-        <p className="text-gray-600 mb-4">Répondez à toutes les questions. Score requis: 80%</p>
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
-          <div 
-            className="bg-blue-600 h-2 rounded-full" 
-            style={{width: `${(Object.keys(testAnswers).length / currentTest.questions.length) * 100}%`}}
-          ></div>
-        </div>
-      </div>
-
-      {currentTest.questions.map((question, qIndex) => (
-        <div key={qIndex} className="bg-white p-6 rounded-lg shadow-lg mb-4">
-          <h3 className="text-lg font-semibold mb-4">{qIndex + 1}. {question.question}</h3>
-          <div className="space-y-2">
-            {question.options.map((option, oIndex) => (
-              <button
-                key={oIndex}
-                onClick={() => answerQuestion(qIndex, oIndex)}
-                className={`w-full text-left p-3 rounded-lg border transition-colors ${
-                  testAnswers[qIndex] === oIndex 
-                    ? 'bg-blue-100 border-blue-500' 
-                    : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-                }`}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
-      ))}
-
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <button
-          onClick={submitTest}
-          disabled={Object.keys(testAnswers).length !== currentTest.questions.length}
-          className="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-        >
-          Soumettre le Test
-        </button>
-      </div>
-    </div>
-  );
-
-  const renderTestResults = () => (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-        {testResults.passed ? (
-          <>
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-green-600 mb-2">Félicitations!</h2>
-            <p className="text-xl mb-4">Vous avez passé au niveau {currentLevel}!</p>
-          </>
-        ) : (
-          <>
-            <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-red-600 mb-2">Test Échoué</h2>
-            <p className="text-xl mb-4">Continuez à vous entraîner et réessayez!</p>
-          </>
-        )}
-        
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <p className="text-2xl font-bold mb-2">{testResults.score.toFixed(1)}%</p>
-          <p className="text-gray-600">{testResults.correct}/{testResults.total} réponses correctes</p>
-        </div>
-
-        <div className="space-y-3">
-          <button
-            onClick={() => {
-              setCurrentTest(null);
-              setShowTestResults(false);
-              setCurrentModule('dashboard');
-            }}
-            className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
-          >
-            Retour au Tableau de Bord
-          </button>
-          
-          {!testResults.passed && (
-            <button
-              onClick={() => {
-                setShowTestResults(false);
-                setTestAnswers({});
-              }}
-              className="w-full bg-gray-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-gray-600 transition-colors"
-            >
-              Recommencer le Test
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="bg-blue-600 text-white p-2 rounded-lg mr-3">
-                <Target className="h-8 w-8" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Entraîneur Hockey Pro</h1>
-                <p className="text-sm text-gray-500">Spécialisé Défenseur</p>
-              </div>
-            </div>
-            
-            {/* Navigation */}
-            {!currentTest && (
-              <nav className="hidden md:flex space-x-4">
-                <button
-                  onClick={() => setCurrentModule('dashboard')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    currentModule === 'dashboard' 
-                      ? 'bg-blue-600 text-white' 
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Tableau de Bord
-                </button>
-                {Object.entries(modules).map(([key, module]) => (
-                  <button
-                    key={key}
-                    onClick={() => setCurrentModule(key)}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      currentModule === key 
-                        ? 'bg-blue-600 text-white' 
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    {module.title}
-                  </button>
-                ))}
-              </nav>
-            )}
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        {currentTest && !showTestResults && renderTest()}
-        {showTestResults && renderTestResults()}
-        {!currentTest && !showTestResults && (
-          <>
-            {currentModule === 'dashboard' && renderDashboard()}
-            {currentModule !== 'dashboard' && renderModule(currentModule)}
-          </>
-        )}
-      </main>
-    </div>
-  );
 };
 
-export default HockeyTrainer;
+let currentQuizNum = 0;
+let selectedOption = null;
+
+function updateProgress() {
+    const levels = [1, 2, 3];
+    levels.forEach(levelNum => {
+        const exercises = document.querySelectorAll(`#level-${levelNum} .exercise input`);
+        if (exercises.length > 0) {
+            const allDone = Array.from(exercises).every(cb => cb.checked);
+            const quizBtn = document.getElementById(`quiz${levelNum}-btn`);
+            if (quizBtn) {
+                quizBtn.disabled = !allDone;
+            }
+        }
+    });
+    saveProgress();
+}
+
+function startQuiz(levelNum) {
+    currentQuizNum = levelNum;
+    const quiz = quizzes[levelNum];
+    document.getElementById('quiz-title').innerText = quiz.title;
+    
+    const modal = document.getElementById('quiz-modal');
+    displayQuestion(0);
+    modal.style.display = "block";
+}
+
+function displayQuestion(questionIndex) {
+    const quiz = quizzes[currentQuizNum];
+    const question = quiz.questions[questionIndex];
+    
+    document.getElementById('quiz-question').innerText = question.question;
+    const optionsContainer = document.getElementById('quiz-options');
+    optionsContainer.innerHTML = '';
+    selectedOption = null;
+
+    question.options.forEach(option => {
+        const button = document.createElement('button');
+        button.innerText = option;
+        button.onclick = () => {
+            if(selectedOption) {
+                selectedOption.classList.remove('selected');
+            }
+            selectedOption = button;
+            selectedOption.classList.add('selected');
+        };
+        optionsContainer.appendChild(button);
+    });
+    
+    document.getElementById('quiz-feedback').innerText = '';
+    document.getElementById('quiz-submit-btn').style.display = 'block';
+
+}
+
+
+function submitQuiz() {
+    if (!selectedOption) {
+        alert("Choisis une réponse !");
+        return;
+    }
+
+    const quiz = quizzes[currentQuizNum];
+    // Pour ce cas simple, on ne gère qu'une question à la fois.
+    const currentQuestion = quiz.questions[0]; 
+    const feedback = document.getElementById('quiz-feedback');
+
+    if (selectedOption.innerText === currentQuestion.answer) {
+        feedback.innerText = "Bonne réponse ! Niveau débloqué !";
+        feedback.style.color = 'green';
+        unlockNextLevel(currentQuizNum);
+        setTimeout(closeQuiz, 2000);
+    } else {
+        feedback.innerText = "Mauvaise réponse. Revois tes classiques et réessaie !";
+        feedback.style.color = 'red';
+    }
+     document.getElementById('quiz-submit-btn').style.display = 'none';
+}
+
+
+function closeQuiz() {
+    document.getElementById('quiz-modal').style.display = "none";
+}
+
+function unlockNextLevel(levelNum) {
+    const nextLevelNum = levelNum + 1;
+    const nextLevel = document.getElementById(`level-${nextLevelNum}`);
+    if (nextLevel) {
+        nextLevel.classList.remove('locked');
+        nextLevel.innerHTML += getLevelContent(nextLevelNum); // Ajoute le contenu du niveau
+        updateProgress();
+    }
+    localStorage.setItem(`level-${nextLevelNum}-unlocked`, 'true');
+}
+
+function getLevelContent(levelNum) {
+    if (levelNum === 2) {
+        return `
+            <div class="skill-category">
+                <h3><i class="fas fa-map-marker-alt"></i> Positionnement</h3>
+                <div class="exercise" data-skill="positioning-2">
+                    <input type="checkbox" id="pos2-1" onchange="updateProgress()">
+                    <label for="pos2-1"><strong>Jeu à la ligne bleue offensive :</strong> Apprends quand 'pincer' pour garder la rondelle en zone offensive et quand reculer pour éviter un 2 contre 1. [1] C'est une question de lecture de jeu.</label>
+                </div>
+            </div>
+             <div class="skill-category">
+                <h3><i class="fas fa-bullseye"></i> Tirs</h3>
+                <div class="exercise" data-skill="shooting-2">
+                    <input type="checkbox" id="shoot2-1" onchange="updateProgress()">
+                    <label for="shoot2-1"><strong>Tirs bas pour déviations :</strong> Au lieu de toujours viser la lucarne, entraîne-toi à tirer bas et fort en direction du but pour que tes attaquants puissent dévier la rondelle.</label>
+                </div>
+            </div>
+            <button class="quiz-btn" id="quiz2-btn" onclick="startQuiz(2)" disabled>Quiz du Niveau 2</button>
+        `;
+    }
+     if (levelNum === 3) {
+        return `
+            <div class="skill-category">
+                <h3><i class="fas fa-map-marker-alt"></i> Intelligence de Jeu</h3>
+                <div class="exercise" data-skill="gameiq-3">
+                    <input type="checkbox" id="gi3-1" onchange="updateProgress()">
+                    <label for="gi3-1"><strong>Lecture de la montée (Rush Reading) :</strong> Analyse rapidement la situation (2 contre 1, 3 contre 2) et communique avec ton partenaire pour savoir qui prend le porteur de la rondelle et qui couvre la passe. [20]</label>
+                </div>
+            </div>
+        `;
+    }
+    return '';
+}
+
+// Sauvegarde et chargement de la progression
+function saveProgress() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        localStorage.setItem(cb.id, cb.checked);
+    });
+}
+
+function loadProgress() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        const isChecked = localStorage.getItem(cb.id) === 'true';
+        cb.checked = isChecked;
+    });
+
+    if (localStorage.getItem('level-2-unlocked') === 'true') {
+        const level2 = document.getElementById('level-2');
+        level2.classList.remove('locked');
+        level2.innerHTML = `<h2>Niveau 2 : Maîtrise Tactique</h2>` + getLevelContent(2);
+    }
+    if (localStorage.getItem('level-3-unlocked') === 'true') {
+         const level3 = document.getElementById('level-3');
+        level3.classList.remove('locked');
+        level3.innerHTML = `<h2>Niveau 3 : Le Défenseur d'Élite</h2>` + getLevelContent(3);
+    }
+    
+    // Re-check checkboxes after loading dynamic content
+     const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+    allCheckboxes.forEach(cb => {
+        const isChecked = localStorage.getItem(cb.id) === 'true';
+        cb.checked = isChecked;
+    });
+
+    updateProgress();
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+Google Search Suggestions
+Display of Search Suggestions is required when using Grounding with Google Search. Learn more
+exercices pour défenseur hockey sur glace positionnement
+exercices de tir pour défenseur hockey sur glace
+exercices technique pour défenseur hockey sur glace
+exercices intelligence de jeu pour défenseur hockey sur glace
+tutoriels en ligne pour défenseur de hockey sur glace
+exemples de quiz interactifs en HTML CSS JavaScript
