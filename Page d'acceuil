@@ -1,0 +1,572 @@
+import React, { useState, useEffect } from 'react';
+import { ChevronRight, Trophy, Target, Brain, Zap, CheckCircle, XCircle, Star, Medal, Book, Play } from 'lucide-react';
+
+const HockeyTrainer = () => {
+  const [currentLevel, setCurrentLevel] = useState('Débutant');
+  const [currentModule, setCurrentModule] = useState('dashboard');
+  const [playerStats, setPlayerStats] = useState({
+    totalPoints: 0,
+    testsCompleted: 0,
+    dailyChallengesCompleted: 0,
+    currentStreak: 0
+  });
+  const [testResults, setTestResults] = useState({});
+  const [currentTest, setCurrentTest] = useState(null);
+  const [testAnswers, setTestAnswers] = useState({});
+  const [showTestResults, setShowTestResults] = useState(false);
+
+  const levels = ['Débutant', 'Intermédiaire', 'Avancé', 'Elite'];
+  
+  const modules = {
+    positionnement: {
+      title: 'Positionnement',
+      icon: Target,
+      description: 'Maîtrisez les positions défensives optimales',
+      color: 'bg-blue-500'
+    },
+    tirPasse: {
+      title: 'Tir & Passe',
+      icon: Zap,
+      description: 'Perfectionnez vos tirs et passes défensives',
+      color: 'bg-green-500'
+    },
+    technique: {
+      title: 'Technique',
+      icon: Star,
+      description: 'Développez vos compétences techniques',
+      color: 'bg-purple-500'
+    },
+    intelligence: {
+      title: 'Intelligence de Jeu',
+      icon: Brain,
+      description: 'Améliorez votre lecture du jeu',
+      color: 'bg-orange-500'
+    }
+  };
+
+  const levelTests = {
+    'Débutant': {
+      title: 'Test de Passage - Niveau Intermédiaire',
+      questions: [
+        {
+          question: "Quelle est la position optimale d'un défenseur lors d'un 2 contre 1?",
+          options: [
+            "Se placer entre les deux attaquants",
+            "Forcer le porteur vers l'extérieur tout en gardant un œil sur le passeur",
+            "Attaquer directement le porteur",
+            "Rester devant le filet"
+          ],
+          correct: 1
+        },
+        {
+          question: "Quel type de passe un défenseur doit-il privilégier en sortie de zone?",
+          options: [
+            "Passe haute et longue",
+            "Passe courte et précise le long de la bande",
+            "Passe au centre de la patinoire",
+            "Dégagement sans regarder"
+          ],
+          correct: 1
+        },
+        {
+          question: "Comment doit-on patiner en reculant face à un attaquant?",
+          options: [
+            "Regard fixé sur la rondelle",
+            "Patins parallèles, regard sur le torse de l'attaquant",
+            "En croisant les patins",
+            "Le plus vite possible sans technique"
+          ],
+          correct: 1
+        },
+        {
+          question: "Que fait un défenseur quand son partenaire défensif sort de position?",
+          options: [
+            "Il reste à sa place",
+            "Il couvre temporairement sa zone",
+            "Il monte à l'attaque",
+            "Il crie sur son coéquipier"
+          ],
+          correct: 1
+        },
+        {
+          question: "Quel est le meilleur angle pour un tir de défenseur?",
+          options: [
+            "Tir direct sans préparation",
+            "Tir bas vers les jambières",
+            "Tir à hauteur de genoux avec déviation possible",
+            "Tir le plus fort possible"
+          ],
+          correct: 2
+        }
+      ]
+    },
+    'Intermédiaire': {
+      title: 'Test de Passage - Niveau Avancé',
+      questions: [
+        {
+          question: "Dans un système défensif 'box + 1', quel est le rôle du défenseur mobile?",
+          options: [
+            "Rester statique devant le filet",
+            "Presser le porteur et couper les lignes de passe",
+            "Couvrir uniquement la zone haute",
+            "Suivre un attaquant spécifique"
+          ],
+          correct: 1
+        },
+        {
+          question: "Comment gérer un attaquant qui fait du 'cycling' derrière votre filet?",
+          options: [
+            "Le suivre partout",
+            "Rester devant le filet",
+            "Coordonner avec le partenaire pour le serrer progressivement",
+            "Laisser le gardien s'en occuper"
+          ],
+          correct: 2
+        },
+        {
+          question: "Quelle technique utiliser pour un tir frappé efficace depuis la ligne bleue?",
+          options: [
+            "Transfert de poids arrière vers avant, flex maximal du bâton",
+            "Mouvement rapide des bras seulement",
+            "Position statique et force des épaules",
+            "Élan le plus long possible"
+          ],
+          correct: 0
+        },
+        {
+          question: "Comment lire une attaque à 3 joueurs en zone offensive adverse?",
+          options: [
+            "Marquer l'homme le plus proche",
+            "Identifier le danger primaire et ajuster selon les mouvements",
+            "Toujours rester au centre",
+            "Attendre que l'attaque se développe"
+          ],
+          correct: 1
+        },
+        {
+          question: "Quelle est la meilleure façon de sortir la rondelle sous pression?",
+          options: [
+            "Dégagement aveugle",
+            "Passe courte à un coéquipier démarqué ou dégagement contrôlé",
+            "Toujours passer au centre",
+            "Garder la rondelle le plus longtemps possible"
+          ],
+          correct: 1
+        }
+      ]
+    }
+  };
+
+  const dailyChallenges = {
+    'Débutant': [
+      "Visualisez 5 situations de 2 contre 1 et identifiez la bonne position",
+      "Pratiquez 10 passes précises le long de la bande mentalement",
+      "Analysez 3 séquences de patinage arrière"
+    ],
+    'Intermédiaire': [
+      "Résolvez 3 situations de jeu complexes en zone défensive",
+      "Perfectionnez votre technique de tir frappé (visualisation)",
+      "Étudiez 5 systèmes défensifs différents"
+    ],
+    'Avancé': [
+      "Maîtrisez les transitions défense-attaque",
+      "Analysez des jeux de puissance adverses",
+      "Perfectionnez la communication défensive"
+    ]
+  };
+
+  const startTest = (level) => {
+    setCurrentTest(levelTests[level]);
+    setTestAnswers({});
+    setShowTestResults(false);
+  };
+
+  const answerQuestion = (questionIndex, answerIndex) => {
+    setTestAnswers(prev => ({
+      ...prev,
+      [questionIndex]: answerIndex
+    }));
+  };
+
+  const submitTest = () => {
+    const questions = currentTest.questions;
+    let correct = 0;
+    
+    questions.forEach((question, index) => {
+      if (testAnswers[index] === question.correct) {
+        correct++;
+      }
+    });
+    
+    const score = (correct / questions.length) * 100;
+    const passed = score >= 80;
+    
+    setTestResults({
+      score,
+      passed,
+      correct,
+      total: questions.length
+    });
+    
+    if (passed) {
+      const currentIndex = levels.indexOf(currentLevel);
+      if (currentIndex < levels.length - 1) {
+        setCurrentLevel(levels[currentIndex + 1]);
+      }
+      setPlayerStats(prev => ({
+        ...prev,
+        totalPoints: prev.totalPoints + 100,
+        testsCompleted: prev.testsCompleted + 1
+      }));
+    }
+    
+    setShowTestResults(true);
+  };
+
+  const renderDashboard = () => (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
+        <h2 className="text-2xl font-bold mb-2">Bienvenue, Défenseur!</h2>
+        <p className="text-lg">Niveau actuel: <span className="font-bold">{currentLevel}</span></p>
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <Trophy className="h-8 w-8 mx-auto mb-1" />
+            <p className="text-sm">Points</p>
+            <p className="font-bold">{playerStats.totalPoints}</p>
+          </div>
+          <div className="text-center">
+            <Medal className="h-8 w-8 mx-auto mb-1" />
+            <p className="text-sm">Tests Réussis</p>
+            <p className="font-bold">{playerStats.testsCompleted}</p>
+          </div>
+          <div className="text-center">
+            <Target className="h-8 w-8 mx-auto mb-1" />
+            <p className="text-sm">Défis Quotidiens</p>
+            <p className="font-bold">{playerStats.dailyChallengesCompleted}</p>
+          </div>
+          <div className="text-center">
+            <Star className="h-8 w-8 mx-auto mb-1" />
+            <p className="text-sm">Série Actuelle</p>
+            <p className="font-bold">{playerStats.currentStreak}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h3 className="text-xl font-bold mb-4 flex items-center">
+            <Book className="h-6 w-6 mr-2 text-blue-500" />
+            Modules d'Entraînement
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {Object.entries(modules).map(([key, module]) => {
+              const IconComponent = module.icon;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setCurrentModule(key)}
+                  className={`${module.color} text-white p-3 rounded-lg hover:opacity-90 transition-opacity`}
+                >
+                  <IconComponent className="h-6 w-6 mx-auto mb-1" />
+                  <p className="text-sm font-semibold">{module.title}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h3 className="text-xl font-bold mb-4">Test de Niveau</h3>
+          {currentLevel !== 'Elite' && (
+            <div className="space-y-3">
+              <p className="text-gray-600">Passez au niveau {levels[levels.indexOf(currentLevel) + 1]}</p>
+              <button
+                onClick={() => startTest(currentLevel)}
+                className="w-full bg-red-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-600 transition-colors flex items-center justify-center"
+              >
+                <Play className="h-5 w-5 mr-2" />
+                Commencer le Test
+              </button>
+            </div>
+          )}
+          {currentLevel === 'Elite' && (
+            <p className="text-green-600 font-semibold">🏆 Niveau Maximum Atteint!</p>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h3 className="text-xl font-bold mb-4">Défis Quotidiens - {currentLevel}</h3>
+        <div className="space-y-2">
+          {dailyChallenges[currentLevel]?.map((challenge, index) => (
+            <div key={index} className="flex items-center p-3 bg-gray-50 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+              <span className="text-gray-700">{challenge}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderModule = (moduleKey) => {
+    const module = modules[moduleKey];
+    const IconComponent = module.icon;
+    
+    return (
+      <div className="space-y-6">
+        <div className={`${module.color} text-white p-6 rounded-lg`}>
+          <div className="flex items-center mb-4">
+            <IconComponent className="h-8 w-8 mr-3" />
+            <h2 className="text-2xl font-bold">{module.title}</h2>
+          </div>
+          <p className="text-lg opacity-90">{module.description}</p>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h3 className="text-xl font-bold mb-4">Exercices - Niveau {currentLevel}</h3>
+          
+          {moduleKey === 'positionnement' && (
+            <div className="space-y-4">
+              <div className="border-l-4 border-blue-500 pl-4">
+                <h4 className="font-semibold mb-2">Situation 2 contre 1</h4>
+                <p className="text-gray-600 mb-3">L'attaquant arrive avec la rondelle, un coéquipier l'accompagne. Quelle est votre position?</p>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                  Analyser la Situation
+                </button>
+              </div>
+              
+              <div className="border-l-4 border-blue-500 pl-4">
+                <h4 className="font-semibold mb-2">Couverture de Zone</h4>
+                <p className="text-gray-600 mb-3">Votre partenaire défensif est sorti de position. Comment réagissez-vous?</p>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                  Voir les Options
+                </button>
+              </div>
+            </div>
+          )}
+
+          {moduleKey === 'tirPasse' && (
+            <div className="space-y-4">
+              <div className="border-l-4 border-green-500 pl-4">
+                <h4 className="font-semibold mb-2">Tir Frappé depuis la Pointe</h4>
+                <p className="text-gray-600 mb-3">Technique pour un tir précis et puissant depuis la ligne bleue.</p>
+                <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                  Voir la Technique
+                </button>
+              </div>
+              
+              <div className="border-l-4 border-green-500 pl-4">
+                <h4 className="font-semibold mb-2">Passe de Sortie</h4>
+                <p className="text-gray-600 mb-3">Comment effectuer une passe précise sous pression.</p>
+                <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                  Pratiquer
+                </button>
+              </div>
+            </div>
+          )}
+
+          {moduleKey === 'technique' && (
+            <div className="space-y-4">
+              <div className="border-l-4 border-purple-500 pl-4">
+                <h4 className="font-semibold mb-2">Patinage Arrière</h4>
+                <p className="text-gray-600 mb-3">Perfectionnez votre technique de patinage défensif.</p>
+                <button className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                  Exercices Techniques
+                </button>
+              </div>
+              
+              <div className="border-l-4 border-purple-500 pl-4">
+                <h4 className="font-semibold mb-2">Transitions</h4>
+                <p className="text-gray-600 mb-3">Maîtrisez les changements de direction rapides.</p>
+                <button className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                  Entraînement
+                </button>
+              </div>
+            </div>
+          )}
+
+          {moduleKey === 'intelligence' && (
+            <div className="space-y-4">
+              <div className="border-l-4 border-orange-500 pl-4">
+                <h4 className="font-semibold mb-2">Lecture du Jeu</h4>
+                <p className="text-gray-600 mb-3">Anticipez les mouvements offensifs adverses.</p>
+                <button className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                  Quiz Tactique
+                </button>
+              </div>
+              
+              <div className="border-l-4 border-orange-500 pl-4">
+                <h4 className="font-semibold mb-2">Communication</h4>
+                <p className="text-gray-600 mb-3">Coordonnez efficacement avec vos coéquipiers.</p>
+                <button className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                  Scénarios
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderTest = () => (
+    <div className="max-w-3xl mx-auto">
+      <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <h2 className="text-2xl font-bold mb-4">{currentTest.title}</h2>
+        <p className="text-gray-600 mb-4">Répondez à toutes les questions. Score requis: 80%</p>
+        <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+          <div 
+            className="bg-blue-600 h-2 rounded-full" 
+            style={{width: `${(Object.keys(testAnswers).length / currentTest.questions.length) * 100}%`}}
+          ></div>
+        </div>
+      </div>
+
+      {currentTest.questions.map((question, qIndex) => (
+        <div key={qIndex} className="bg-white p-6 rounded-lg shadow-lg mb-4">
+          <h3 className="text-lg font-semibold mb-4">{qIndex + 1}. {question.question}</h3>
+          <div className="space-y-2">
+            {question.options.map((option, oIndex) => (
+              <button
+                key={oIndex}
+                onClick={() => answerQuestion(qIndex, oIndex)}
+                className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                  testAnswers[qIndex] === oIndex 
+                    ? 'bg-blue-100 border-blue-500' 
+                    : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <button
+          onClick={submitTest}
+          disabled={Object.keys(testAnswers).length !== currentTest.questions.length}
+          className="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+        >
+          Soumettre le Test
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderTestResults = () => (
+    <div className="max-w-2xl mx-auto">
+      <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+        {testResults.passed ? (
+          <>
+            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+            <h2 className="text-3xl font-bold text-green-600 mb-2">Félicitations!</h2>
+            <p className="text-xl mb-4">Vous avez passé au niveau {currentLevel}!</p>
+          </>
+        ) : (
+          <>
+            <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+            <h2 className="text-3xl font-bold text-red-600 mb-2">Test Échoué</h2>
+            <p className="text-xl mb-4">Continuez à vous entraîner et réessayez!</p>
+          </>
+        )}
+        
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <p className="text-2xl font-bold mb-2">{testResults.score.toFixed(1)}%</p>
+          <p className="text-gray-600">{testResults.correct}/{testResults.total} réponses correctes</p>
+        </div>
+
+        <div className="space-y-3">
+          <button
+            onClick={() => {
+              setCurrentTest(null);
+              setShowTestResults(false);
+              setCurrentModule('dashboard');
+            }}
+            className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+          >
+            Retour au Tableau de Bord
+          </button>
+          
+          {!testResults.passed && (
+            <button
+              onClick={() => {
+                setShowTestResults(false);
+                setTestAnswers({});
+              }}
+              className="w-full bg-gray-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-gray-600 transition-colors"
+            >
+              Recommencer le Test
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="bg-blue-600 text-white p-2 rounded-lg mr-3">
+                <Target className="h-8 w-8" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Entraîneur Hockey Pro</h1>
+                <p className="text-sm text-gray-500">Spécialisé Défenseur</p>
+              </div>
+            </div>
+            
+            {/* Navigation */}
+            {!currentTest && (
+              <nav className="hidden md:flex space-x-4">
+                <button
+                  onClick={() => setCurrentModule('dashboard')}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    currentModule === 'dashboard' 
+                      ? 'bg-blue-600 text-white' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Tableau de Bord
+                </button>
+                {Object.entries(modules).map(([key, module]) => (
+                  <button
+                    key={key}
+                    onClick={() => setCurrentModule(key)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      currentModule === key 
+                        ? 'bg-blue-600 text-white' 
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    {module.title}
+                  </button>
+                ))}
+              </nav>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        {currentTest && !showTestResults && renderTest()}
+        {showTestResults && renderTestResults()}
+        {!currentTest && !showTestResults && (
+          <>
+            {currentModule === 'dashboard' && renderDashboard()}
+            {currentModule !== 'dashboard' && renderModule(currentModule)}
+          </>
+        )}
+      </main>
+    </div>
+  );
+};
+
+export default HockeyTrainer;
