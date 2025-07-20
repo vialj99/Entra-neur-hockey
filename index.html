@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entraîneur Hockey Pro - Défenseur</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Intégration de Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
-    <!-- ======== HEADER ======== -->
     <header>
         <div class="header-container">
             <div class="logo">
@@ -23,73 +21,41 @@
                 </div>
             </div>
             <nav>
-                <button id="nav-dashboard" class="nav-btn active">Tableau de Bord</button>
+                <button id="nav-dashboard-btn" class="nav-btn active">Tableau de Bord</button>
             </nav>
         </div>
     </header>
 
-    <!-- ======== MAIN CONTENT ======== -->
-    <main>
-        <!-- ======== VIEW: DASHBOARD ======== -->
+    <main id="main-content">
+        <!-- Chaque section est une "vue" qui sera affichée ou masquée par le JavaScript -->
+
+        <!-- Vue 1: Tableau de Bord -->
         <div id="dashboard-view" class="view active">
-            <!-- Welcome Banner -->
             <div class="welcome-banner card">
                 <div>
                     <h2 id="welcome-title">Bienvenue, Défenseur!</h2>
-                    <p>Niveau actuel: <span id="current-level-display" class="font-bold">Débutant</span></p>
+                    <p>Niveau actuel: <span id="current-level-display" class="font-bold"></span></p>
                 </div>
             </div>
-
-            <!-- Player Stats -->
             <div class="stats-grid">
-                <div class="stat-card card">
-                    <i class="fa-solid fa-trophy icon"></i>
-                    <p class="stat-value" id="stats-points">0</p>
-                    <p class="stat-label">Points</p>
-                </div>
-                <div class="stat-card card">
-                    <i class="fa-solid fa-medal icon"></i>
-                    <p class="stat-value" id="stats-tests">0</p>
-                    <p class="stat-label">Tests Réussis</p>
-                </div>
-                <div class="stat-card card">
-                    <i class="fa-solid fa-star icon"></i>
-                    <p class="stat-value" id="stats-streak">0</p>
-                    <p class="stat-label">Série Actuelle</p>
-                </div>
+                <div class="stat-card card"><i class="fa-solid fa-trophy icon"></i><p id="stats-points" class="stat-value"></p><p class="stat-label">Points</p></div>
+                <div class="stat-card card"><i class="fa-solid fa-medal icon"></i><p id="stats-tests" class="stat-value"></p><p class="stat-label">Tests Réussis</p></div>
             </div>
-
-            <!-- Training Modules & Level Test -->
             <div class="main-grid">
-                <div class="card">
-                    <h3><i class="fa-solid fa-book-open icon-left"></i>Modules d'Entraînement</h3>
-                    <div id="modules-container" class="modules-grid">
-                        <!-- Les modules seront injectés ici par le JS -->
-                    </div>
-                </div>
-                <div class="card">
-                    <h3><i class="fa-solid fa-graduation-cap icon-left"></i>Test de Niveau</h3>
-                    <div id="level-test-container">
-                        <!-- Le contenu du test de niveau sera injecté ici -->
-                    </div>
-                </div>
+                <div id="modules-container" class="card"></div>
+                <div id="level-test-container" class="card"></div>
             </div>
         </div>
 
-        <!-- ======== VIEW: MODULE ======== -->
-        <div id="module-view" class="view">
-            <!-- Le contenu du module sera injecté ici -->
-        </div>
+        <!-- Vue 2: Module (Liste des exercices) -->
+        <div id="module-view" class="view"></div>
 
-        <!-- ======== VIEW: TEST ======== -->
-        <div id="test-view" class="view">
-            <!-- Le contenu du test sera injecté ici -->
-        </div>
+        <!-- Vue 3: Exercice individuel avec quiz -->
+        <div id="exercise-view" class="view"></div>
+
+        <!-- Vue 4: Test de passage de niveau -->
+        <div id="test-view" class="view"></div>
         
-        <!-- ======== VIEW: TEST RESULTS ======== -->
-        <div id="results-view" class="view">
-            <!-- Les résultats du test seront injectés ici -->
-        </div>
     </main>
 
     <script src="script.js"></script>
