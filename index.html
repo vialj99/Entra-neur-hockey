@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entraîneur Hockey Pro - Défenseur</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
@@ -18,31 +18,36 @@
                     <p>Spécialisé Défenseur</p>
                 </div>
             </div>
-            <nav>
-                <button id="nav-dashboard-btn" class="nav-btn active">Tableau de Bord</button>
-            </nav>
+            <nav><button id="nav-dashboard-btn" class="nav-btn active">Tableau de Bord</button></nav>
         </div>
     </header>
 
     <main id="main-content">
-        <!-- Vue 1: Tableau de Bord -->
-        <div id="dashboard-view" class="view active">
-            <!-- Contenu généré par JS -->
+        <!-- Vue 1: Tableau de Bord (Visible par défaut) -->
+        <div id="dashboard-view" class="view">
+            <div class="welcome-banner card">
+                <h2>Bienvenue, Défenseur!</h2>
+                <p>Niveau actuel: <span class="font-bold" id="level-display">Débutant</span></p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card card"><i class="fa-solid fa-trophy icon"></i><p class="stat-value" id="points-display">0</p><p class="stat-label">Points</p></div>
+            </div>
+            <div class="card">
+                <h3><i class="fa-solid fa-book-open icon-left"></i>Modules d'Entraînement</h3>
+                <div class="modules-grid" id="modules-container">
+                    <!-- Les modules seront insérés ici par le JS -->
+                </div>
+            </div>
         </div>
 
-        <!-- Vue 2: Module (Liste des exercices) -->
-        <div id="module-view" class="view">
-            <!-- Contenu généré par JS -->
+        <!-- Vue 2: Liste des exercices (Cachée par défaut) -->
+        <div id="module-view" class="view hidden">
+            <!-- Le contenu sera généré par le JS -->
         </div>
 
-        <!-- Vue 3: Exercice individuel avec quiz -->
-        <div id="exercise-view" class="view">
-            <!-- Contenu généré par JS -->
-        </div>
-
-        <!-- Vue 4: Test de passage de niveau -->
-        <div id="test-view" class="view">
-            <!-- Contenu généré par JS -->
+        <!-- Vue 3: Exercice individuel (Cachée par défaut) -->
+        <div id="exercise-view" class="view hidden">
+            <!-- Le contenu sera généré par le JS -->
         </div>
     </main>
 
