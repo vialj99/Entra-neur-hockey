@@ -4,8 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entraîneur Hockey Pro - Défenseur</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Les icônes depuis internet -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Le style (CSS) est maintenant directement ici -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        :root {
+            --blue-100: #dbeafe; --blue-500: #3b82f6; --blue-600: #2563eb;
+            --green-100: #dcfce7; --green-500: #22c55e; --green-600: #16a34a;
+            --red-100: #fee2e2; --red-500: #ef4444; --red-600: #dc2626;
+            --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+            --gray-500: #6b7280; --gray-900: #111827;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body { font-family: 'Inter', sans-serif; background-color: var(--gray-100); color: var(--gray-900); margin: 0; }
+        .hidden { display: none !important; }
+        main { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .view { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        header { background-color: var(--white); box-shadow: var(--shadow); padding: 1rem 2rem; position: sticky; top: 0; z-index: 10; }
+        .header-container { max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 1rem; }
+        .logo-icon-wrapper { background-color: var(--blue-600); color: var(--white); padding: 0.75rem; border-radius: 0.5rem; display: grid; place-items: center; font-size: 1.25rem; }
+        .logo h1 { font-size: 1.5rem; margin: 0; }
+        .logo p { color: var(--gray-500); margin: 0; font-size: 0.9rem; }
+        .nav-btn { background: var(--blue-500); color: var(--white); border:none; padding: 0.5rem 1rem; font-size: 1rem; font-weight: 600; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s; }
+        .nav-btn:hover { background-color: var(--blue-600); }
+
+        .card { background-color: var(--white); border-radius: 0.75rem; padding: 1.5rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; }
+        .card h2 { margin-top: 0; }
+        .card h3 { margin-top: 0; border-bottom: 1px solid var(--gray-200); padding-bottom: 0.75rem; margin-bottom: 1rem; }
+        .icon-left { margin-right: 0.5rem; }
+        .welcome-banner { background: linear-gradient(to right, var(--blue-600), #7c3aed); color: var(--white); padding: 2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; }
+        .stat-card { text-align: center; }
+        .stat-card .icon { font-size: 2rem; color: var(--blue-500); margin-bottom: 0.5rem; }
+        .stat-value { font-size: 2.5rem; font-weight: 800; margin: 0; }
+        .stat-label { color: var(--gray-500); margin: 0; }
+        .font-bold { font-weight: 700; }
+
+        .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .module-btn { color: var(--white); padding: 1rem; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-align: center; }
+        .module-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        .module-btn:disabled { background-color: var(--gray-500) !important; cursor: not-allowed; }
+        .module-btn .icon { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
+        
+        .exercise-list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid var(--gray-200); border-radius: 0.5rem; margin-bottom: 0.75rem; cursor: pointer; transition: border-color 0.2s, background-color 0.2s; }
+        .exercise-list-item:hover { border-color: var(--blue-500); background-color: var(--gray-50); }
+        .exercise-list-item.locked { background-color: var(--gray-50); color: var(--gray-500); cursor: not-allowed; }
+        .exercise-list-item.locked:hover { border-color: var(--gray-200); }
+        .exercise-title { font-weight: 600; }
+        .exercise-level { font-size: 0.8rem; background-color: var(--gray-200); padding: 0.2rem 0.5rem; border-radius: 1rem; }
+        .exercise-scenario { background-color: var(--gray-50); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border-left: 4px solid var(--blue-500); }
+        .feedback { padding: 1rem; border-radius: 0.5rem; margin-top: 1.5rem; font-weight: 600; }
+        .feedback.correct { background-color: var(--green-100); color: var(--green-600); }
+        .feedback.incorrect { background-color: var(--red-100); color: var(--red-600); }
+
+        .btn { display: inline-flex; justify-content: center; align-items: center; padding: 0.6rem 1.2rem; font-size: 0.9rem; font-weight: 600; border: none; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s; text-decoration: none; }
+        .btn-blue { background-color: var(--blue-500); color: var(--white); }
+        .btn-blue:hover { background-color: var(--blue-600); }
+        .option-btn { display: block; width: 100%; text-align: left; padding: 0.75rem; margin-bottom: 0.5rem; border-radius: 0.5rem; border: 2px solid var(--gray-200); background-color: var(--white); cursor: pointer; transition: all 0.2s; }
+        .option-btn:hover:not(:disabled) { border-color: var(--blue-500); background-color: var(--gray-50); }
+        .option-btn.correct { border-color: var(--green-600) !important; background-color: var(--green-100) !important; }
+        .option-btn.incorrect { border-color: var(--red-600) !important; background-color: var(--red-100) !important; }
+        .btn:disabled, .option-btn:disabled { background-color: var(--gray-200); color: var(--gray-500); cursor: not-allowed; border-color: var(--gray-200); }
+
+        .bg-blue { background-color: var(--blue-500); } .bg-green { background-color: var(--green-500); } .bg-purple { background-color: var(--purple-500); } .bg-orange { background-color: var(--orange-500); }
+        .color-blue { color: var(--blue-500); } .color-green { color: var(--green-500); } .color-purple { color: var(--purple-500); } .color-orange { color: var(--orange-500); }
+    </style>
 </head>
 <body>
 
@@ -13,44 +85,169 @@
         <div class="header-container">
             <div class="logo">
                 <div class="logo-icon-wrapper"><i class="fa-solid fa-hockey-puck"></i></div>
-                <div>
-                    <h1>Entraîneur Hockey Pro</h1>
-                    <p>Spécialisé Défenseur</p>
-                </div>
+                <div><h1>Entraîneur Hockey Pro</h1><p>Spécialisé Défenseur</p></div>
             </div>
-            <nav><button id="nav-dashboard-btn" class="nav-btn active">Tableau de Bord</button></nav>
+            <nav><button id="nav-dashboard-btn" class="nav-btn">Tableau de Bord</button></nav>
         </div>
     </header>
 
     <main id="main-content">
-        <!-- Vue 1: Tableau de Bord (Visible par défaut) -->
+        <!-- Vue 1: Tableau de Bord -->
         <div id="dashboard-view" class="view">
             <div class="welcome-banner card">
                 <h2>Bienvenue, Défenseur!</h2>
-                <p>Niveau actuel: <span class="font-bold" id="level-display">Débutant</span></p>
+                <p>Niveau actuel: <span class="font-bold" id="level-display"></span></p>
             </div>
             <div class="stats-grid">
-                <div class="stat-card card"><i class="fa-solid fa-trophy icon"></i><p class="stat-value" id="points-display">0</p><p class="stat-label">Points</p></div>
+                <div class="stat-card card"><i class="fa-solid fa-trophy icon"></i><p class="stat-value" id="points-display"></p><p class="stat-label">Points</p></div>
             </div>
             <div class="card">
                 <h3><i class="fa-solid fa-book-open icon-left"></i>Modules d'Entraînement</h3>
-                <div class="modules-grid" id="modules-container">
-                    <!-- Les modules seront insérés ici par le JS -->
-                </div>
+                <div class="modules-grid" id="modules-container"></div>
             </div>
         </div>
 
-        <!-- Vue 2: Liste des exercices (Cachée par défaut) -->
-        <div id="module-view" class="view hidden">
-            <!-- Le contenu sera généré par le JS -->
-        </div>
+        <!-- Vue 2: Liste des exercices -->
+        <div id="module-view" class="view hidden"></div>
 
-        <!-- Vue 3: Exercice individuel (Cachée par défaut) -->
-        <div id="exercise-view" class="view hidden">
-            <!-- Le contenu sera généré par le JS -->
-        </div>
+        <!-- Vue 3: Exercice individuel -->
+        <div id="exercise-view" class="view hidden"></div>
     </main>
 
-    <script src="script.js"></script>
+    <!-- Le JavaScript est maintenant directement ici -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("Le script tout-en-un est chargé et fonctionne !");
+            
+            // --- CONFIGURATION & DONNÉES ---
+            const config = {
+                levels: ["Débutant", "Intermédiaire", "Avancé", "Elite"],
+                modules: [
+                    { id: "positionnement", title: "Positionnement", icon: "fa-solid fa-crosshairs", color: "blue" },
+                    { id: "tirPasse", title: "Tir & Passe", icon: "fa-solid fa-bolt", color: "green" },
+                    { id: "technique", title: "Technique", icon: "fa-solid fa-star", color: "purple", isLocked: true },
+                    { id: "intelligence", title: "Intelligence de Jeu", icon: "fa-solid fa-brain", color: "orange", isLocked: true },
+                ],
+                exercises: {
+                    positionnement: [
+                        { id:"pos1", title: "Situation 2 contre 1", level: "Débutant", scenario: "L'adversaire arrive à 2 contre vous. Votre bâton doit couper la ligne de passe pendant que votre corps contrôle le porteur.", question: "Votre priorité ?", options: ["Attaquer le porteur", "Couper la ligne de passe", "Reculer"], correct: 1, explanation: "Priorité n°1 : empêcher la passe. Cela force le porteur à prendre un tir d'un angle plus difficile.", points: 10 },
+                        { id:"pos3", title: "'Pincer' à la ligne bleue", level: "Intermédiaire", scenario: "La rondelle longe la bande en zone offensive. Vous pouvez 'pincer' pour la conserver en zone.", question: "Quand pincer ?", options: ["Toujours", "Si sûr de la récupérer", "Jamais"], correct: 1, explanation: "Un pinch est une décision à haut risque. Ne le tentez que si vous êtes certain du succès.", points: 20 },
+                    ],
+                    tirPasse: [
+                        { id:"tir1", title: "Passe de sortie de zone", level: "Débutant", scenario: "Vous êtes sous pression dans le coin de la patinoire. Votre ailier est sur la bande.", question: "Passe la plus sûre ?", options: ["Passe au centre", "Passe indirecte via la bande", "Dégagement en cloche"], correct: 1, explanation: "La passe indirecte le long de la bande est la plus fiable et la plus enseignée sous pression.", points: 10 },
+                    ]
+                }
+            };
+
+            // --- ÉTAT DU JOUEUR ---
+            let state = { currentLevel: "Débutant", points: 0 };
+
+            // --- ÉLÉMENTS DU DOM ---
+            const views = {
+                dashboard: document.getElementById('dashboard-view'),
+                module: document.getElementById('module-view'),
+                exercise: document.getElementById('exercise-view'),
+            };
+            const displays = {
+                level: document.getElementById('level-display'),
+                points: document.getElementById('points-display'),
+            };
+            const navDashboardBtn = document.getElementById('nav-dashboard-btn');
+            
+            // --- LOGIQUE PRINCIPALE ---
+            const saveState = () => localStorage.setItem("hockeyTrainerState", JSON.stringify(state));
+            const loadState = () => {
+                const saved = localStorage.getItem("hockeyTrainerState");
+                if (saved) state = JSON.parse(saved);
+            };
+            const switchView = (viewName) => {
+                Object.values(views).forEach(v => v.classList.add('hidden'));
+                if (views[viewName]) views[viewName].classList.remove('hidden');
+            };
+
+            // --- FONCTIONS DE RENDU ---
+            const renderDashboard = () => {
+                displays.level.textContent = state.currentLevel;
+                displays.points.textContent = state.points;
+                const modulesContainer = document.getElementById('modules-container');
+                modulesContainer.innerHTML = config.modules.map(mod => `
+                    <button class="module-btn bg-${mod.color}" data-module-id="${mod.id}" ${mod.isLocked ? 'disabled' : ''}>
+                        <i class="${mod.icon} icon"></i>
+                        <p>${mod.title} ${mod.isLocked ? '(Bientôt)' : ''}</p>
+                    </button>
+                `).join('');
+                document.querySelectorAll('.module-btn').forEach(btn => {
+                    if (!btn.disabled) btn.addEventListener('click', () => renderModuleView(btn.dataset.moduleId));
+                });
+                switchView('dashboard');
+            };
+
+            const renderModuleView = (moduleId) => {
+                const module = config.modules.find(m => m.id === moduleId);
+                const exercises = config.exercises[moduleId] || [];
+                views.module.innerHTML = `
+                    <div class="card">
+                        <h2 class="color-${module.color}"><i class="${module.icon} icon-left"></i>${module.title}</h2>
+                        <div class="exercise-list">
+                            ${exercises.length > 0 ? exercises.map(ex => {
+                                const isLocked = config.levels.indexOf(ex.level) > config.levels.indexOf(state.currentLevel);
+                                return `<div class="exercise-list-item ${isLocked ? 'locked' : ''}" data-exercise-id="${ex.id}" data-module-id="${moduleId}">
+                                    <div>
+                                        <p class="exercise-title">${ex.title}</p>
+                                        <span class="exercise-level">${ex.level}</span>
+                                    </div>
+                                    ${isLocked ? `<i class="fa-solid fa-lock"></i>` : `<i class="fa-solid fa-chevron-right"></i>`}
+                                </div>`;
+                            }).join('') : '<p>Aucun exercice pour ce module pour le moment.</p>'}
+                        </div>
+                    </div>`;
+                document.querySelectorAll('.exercise-list-item:not(.locked)').forEach(item => {
+                    item.addEventListener('click', () => renderExerciseView(item.dataset.moduleId, item.dataset.exerciseId));
+                });
+                switchView('module');
+            };
+
+            const renderExerciseView = (moduleId, exerciseId) => {
+                const exercise = config.exercises[moduleId].find(ex => ex.id === exerciseId);
+                views.exercise.innerHTML = `
+                    <div class="card">
+                        <h2>${exercise.title}</h2>
+                        <p class="exercise-scenario">${exercise.scenario}</p>
+                        <h3>${exercise.question}</h3>
+                        <div class="options-container">
+                            ${exercise.options.map((opt, i) => `<button class="option-btn" data-index="${i}">${opt}</button>`).join('')}
+                        </div>
+                        <div class="feedback-container"></div>
+                    </div>`;
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => handleAnswer(e, exercise));
+                });
+                switchView('exercise');
+            };
+
+            const handleAnswer = (event, exercise) => {
+                const selectedIndex = parseInt(event.target.dataset.index);
+                const feedbackContainer = views.exercise.querySelector('.feedback-container');
+                document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+                if (selectedIndex === exercise.correct) {
+                    state.points += exercise.points;
+                    event.target.classList.add('correct');
+                    feedbackContainer.innerHTML = `<div class="feedback correct"><p><strong>Bonne réponse ! (+${exercise.points} points)</strong></p><p>${exercise.explanation}</p></div>`;
+                } else {
+                    event.target.classList.add('incorrect');
+                    views.exercise.querySelector(`.option-btn[data-index='${exercise.correct}']`).classList.add('correct');
+                    feedbackContainer.innerHTML = `<div class="feedback incorrect"><p><strong>Mauvaise réponse.</strong></p><p>${exercise.explanation}</p></div>`;
+                }
+                saveState();
+                feedbackContainer.innerHTML += `<button id="back-to-dashboard-after-exercise" class="btn btn-blue" style="margin-top: 1rem;">Retour au Tableau de Bord</button>`;
+                document.getElementById('back-to-dashboard-after-exercise').addEventListener('click', renderDashboard);
+            };
+
+            // --- INITIALISATION ---
+            navDashboardBtn.addEventListener('click', renderDashboard);
+            loadState();
+            renderDashboard();
+        });
+    </script>
 </body>
 </html>
